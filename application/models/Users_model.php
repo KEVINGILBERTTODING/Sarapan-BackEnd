@@ -33,6 +33,17 @@ class Users_model extends CI_Model
 		$this->db->where('email', $email);
 		return $this->db->get()->row_array();
 	}
+
+
+	public function register($dataUser)
+	{
+		$register = $this->db->insert('users', $dataUser);
+		if ($register) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
 
 /* End of file Users_model.php */
