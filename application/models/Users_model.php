@@ -35,14 +35,25 @@ class Users_model extends CI_Model
 	}
 
 
-	public function register($dataUser)
+	public function register($dataUser, $dataBiodata)
 	{
-		$register = $this->db->insert('users', $dataUser);
-		if ($register) {
+		$insert	= $this->db->insert('users', $dataUser);
+
+		if ($insert) {
 			return true;
 		} else {
 			return false;
 		}
+	}
+
+	// get max userid
+	public function getMaxId()
+	{
+		$this->db->select_max('id');
+		$this->db->from('users');
+		$maxId = $this->db->get()->row_array();
+		$result = $maxId['id'] + 1;
+		return $result;
 	}
 }
 

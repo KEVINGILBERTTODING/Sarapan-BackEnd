@@ -26,6 +26,7 @@ class Auth extends CI_Controller
 		parent::__construct();
 		date_default_timezone_set('Asia/Jakarta');
 		$this->load->model('users_model');
+		$this->load->model('biodata_model');
 	}
 
 	public function login()
@@ -64,6 +65,10 @@ class Auth extends CI_Controller
 		$email = $this->input->post('email');
 		$validate = $this->users_model->login($email);
 		if ($validate == null) {
+			$dataBiodata = [
+				'id_user' => $this->users_model->getMaxId(),
+				'telepon' => $this->input->post('telepon')
+			];
 			$data = [
 				'name' => $this->input->post('name'),
 				'email' => $this->input->post('email'),
@@ -75,12 +80,21 @@ class Auth extends CI_Controller
 
 			];
 
-			$register = $this->users_model->register($data);
+			$register = $this->users_model->register($data, $dataBiodata);
 			if ($register == true) {
-				$response = [
-					'code' => 200
-				];
-				echo json_encode($response);
+				$insertBiodata =  $this->biodata_model->insert($dataBiodata);
+				if ($insertBiodata == true) {
+					$response = [
+						'code' => 200
+					];
+					echo json_encode($response);
+				} else {
+					$response = [
+						'code' => 404,
+						'message' => 'Terjadi kesalahan'
+					];
+					echo json_encode($response);
+				}
 			} else {
 				$response = [
 					'code' => 404,
