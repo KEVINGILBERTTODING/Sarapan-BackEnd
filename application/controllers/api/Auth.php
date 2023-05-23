@@ -36,7 +36,10 @@ class Auth extends CI_Controller
 		if ($validate != null) {
 			if (password_verify($password, $validate['password'])) {
 				$response = [
-					'code' => 200
+					'code' => 200,
+					'user_id' => $validate['id'],
+					'nama' => $validate['name'],
+					'role' => $validate['level']
 				];
 				echo json_encode($response);
 			} else {
