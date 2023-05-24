@@ -55,6 +55,14 @@ class Users_model extends CI_Model
 		$result = $maxId['id'] + 1;
 		return $result;
 	}
+
+	public function getUserById($userId)
+	{
+		$this->db->select('*');
+		$this->db->from('users');
+		$this->db->where('id', $userId);
+		return $this->db->get()->row_array();
+	}
 }
 
 /* End of file Users_model.php */
