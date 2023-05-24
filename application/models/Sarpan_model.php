@@ -47,4 +47,12 @@ class Sarpan_model extends CI_Model
 			return false;
 		}
 	}
+
+	public function gethistorySarapan($userId)
+	{
+		$this->db->select('*');
+		$this->db->from('sarpan');
+		$this->db->where('id_user', $userId);
+		return $this->db->get()->result();
+	}
 }

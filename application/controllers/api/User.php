@@ -126,6 +126,12 @@ class User extends CI_Controller
 			}
 		}
 	}
+
+	public function getHistorySarpan()
+	{
+		$userId = $this->input->get('user_id');
+		echo json_encode($this->sarpan_model->gethistorySarapan($userId));
+	}
 }
 
 
