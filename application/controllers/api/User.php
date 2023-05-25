@@ -34,6 +34,8 @@ class User extends CI_Controller
 		$this->load->model('aspirasi_model');
 		$this->load->model('kecamatan_model');
 		$this->load->model('villages_model');
+		$this->load->model('kategori_bidang_model');
+		$this->load->model('kategori_model');
 	}
 
 	public function getAllDewan()
@@ -176,6 +178,17 @@ class User extends CI_Controller
 	{
 		$id = $this->input->get('id');
 		echo json_encode($this->villages_model->getVillagesById($id));
+	}
+
+	public function getAllKategoriBidang()
+	{
+		echo json_encode($this->kategori_bidang_model->getAllKategoriBidang());
+	}
+
+	public function getAllKategoriById()
+	{
+		$id = $this->input->get('id');
+		echo json_encode($this->kategori_model->getAllKategoriById($id));
 	}
 }
 
