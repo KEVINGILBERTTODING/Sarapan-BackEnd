@@ -50,9 +50,11 @@ class Sarpan_model extends CI_Model
 
 	public function gethistorySarapan($userId)
 	{
-		$this->db->select('*');
+		$this->db->select('sarpan.*, users.name');
 		$this->db->from('sarpan');
 		$this->db->where('id_user', $userId);
+		$this->db->join('users', 'sarpan.id_user = users.id', 'left');
+		$this->db->order_by('id_sarpan', 'desc');
 		return $this->db->get()->result();
 	}
 }

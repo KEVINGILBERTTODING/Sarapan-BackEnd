@@ -31,6 +31,9 @@ class User extends CI_Controller
 		$this->load->model('users_model');
 		$this->load->helper(array('email'));
 		$this->load->library(array('email'));
+		$this->load->model('aspirasi_model');
+		$this->load->model('kecamatan_model');
+		$this->load->model('villages_model');
 	}
 
 	public function getAllDewan()
@@ -131,6 +134,48 @@ class User extends CI_Controller
 	{
 		$userId = $this->input->get('user_id');
 		echo json_encode($this->sarpan_model->gethistorySarapan($userId));
+	}
+
+	public function getHistoryAspirasi()
+	{
+		$userId = $this->input->get('user_id');
+		echo json_encode($this->aspirasi_model->getHistoryAspirasi($userId));
+	}
+
+	public function insertAspirasi()
+	{
+		$dataAspirasi = [
+			'id_user' => '1'
+		];
+
+		$dataDetAspirasi = [
+			'id_aspirasi' => $this->aspirasi_model->getMaxId()
+		];
+
+		$insert =  $this->aspirasi_model->insertAspirasi($dataAspirasi, $dataDetAspirasi);
+		if ($insert == true) {
+			$response = [
+				'code' => 200
+			];
+			echo json_encode($response);
+		} else {
+			$response = [
+				'code' => 404
+			];
+			echo json_encode($response);
+		}
+	}
+
+
+	public function getDistrict()
+	{
+		echo json_encode($this->kecamatan_model->getAllKecamatan());
+	}
+
+	public function getVillagesById()
+	{
+		$id = $this->input->get('id');
+		echo json_encode($this->villages_model->getVillagesById($id));
 	}
 }
 
