@@ -67,4 +67,32 @@ class Aspirasi_model extends CI_Model
 			return false;
 		}
 	}
+
+	public function getMyAspirasi($id)
+	{
+		$this->db->select('aspirasi.*, aspirasi_detail.*, dewan.*, kategori.*, users.*');
+		$this->db->from('aspirasi');
+		$this->db->join('aspirasi_detail', 'aspirasi_detail.id_aspirasi = aspirasi.id_aspirasi', 'left');
+		$this->db->join('dewan', 'dewan.id_dewan = aspirasi.id_dewan', 'left');
+		$this->db->join('kategori', 'kategori.id_kategori = aspirasi.id_kategori', 'left');
+		$this->db->join('users', 'users.id = aspirasi.id_user', 'left');
+		$this->db->where('id_user', $id);
+		$this->db->order_by('aspirasi.id_aspirasi', 'desc');
+
+		return $this->db->get()->result();
+	}
+
+	public function getAspirasiDewanById($id, $status)
+	{
+		$this->db->select('aspirasi.*, aspirasi_detail.*, dewan.*, kategori.*, users.*');
+		$this->db->from('aspirasi');
+		$this->db->join('aspirasi_detail', 'aspirasi_detail.id_aspirasi = aspirasi.id_aspirasi', 'left');
+		$this->db->join('dewan', 'dewan.id_dewan = aspirasi.id_dewan', 'left');
+		$this->db->join('kategori', 'kategori.id_kategori = aspirasi.id_kategori', 'left');
+		$this->db->join('users', 'users.id = aspirasi.id_user', 'left');
+		$this->db->where('aspirasi.id_dewan', $id);
+		$this->db->where('aspirasi_detail.status_aspirasi', $status);
+		$this->db->order_by('aspirasi.id_aspirasi', 'desc');
+		return $this->db->get()->result();
+	}
 }

@@ -36,6 +36,7 @@ class User extends CI_Controller
 		$this->load->model('villages_model');
 		$this->load->model('kategori_bidang_model');
 		$this->load->model('kategori_model');
+		$this->load->model('biodata_model');
 	}
 
 	public function getAllDewan()
@@ -144,31 +145,126 @@ class User extends CI_Controller
 		echo json_encode($this->aspirasi_model->getHistoryAspirasi($userId));
 	}
 
+
+
 	public function insertAspirasi()
 	{
-		$dataAspirasi = [
-			'id_user' => '1'
-		];
 
-		$dataDetAspirasi = [
-			'id_aspirasi' => $this->aspirasi_model->getMaxId()
-		];
+		$email = $this->input->post('email');
 
-		$insert =  $this->aspirasi_model->insertAspirasi($dataAspirasi, $dataDetAspirasi);
-		if ($insert == true) {
+		$subject = 'no-reply';
+		$message =
+			"
+				<b> PERHATIAN JANGAN MEMBALAS EMAIL INI </b>
+				<hr>
+				<br>
+				<p>Terima kasih atas partisipasi anda, anda telah berhasil mengajukan Aspirasi pada
+				tanggal " . date('d-m-Y') . " . <br><br><br>
+
+				<b> Sarapan App </b>
+				";
+
+		// Config email
+		$this->load->library('PHPMailer_load'); //Load Library PHPMailer
+		$mail = $this->phpmailer_load->load(); // Mendefinisikan Variabel Mail
+		$mail->isSMTP();  // Mengirim menggunakan protokol SMTP
+		$mail->Host = 'smtp.gmail.com'; // Host dari server SMTP
+		$mail->SMTPAuth = true; // Autentikasi SMTP
+		$mail->Username = 'sarapanapp@gmail.com';
+		$mail->Password = 'rfwrxdjqmfbthrxp';
+		$mail->SMTPSecure = 'tls';
+		$mail->Port = 587;
+		$mail->setFrom('e-sarapan@gmail.com', 'E-Sarapan'); // Sumber email
+		$mail->addAddress($email, $email); // Alamat tujuan
+		$mail->Subject = $subject; // Subjek Email
+
+		$mail->msgHtml($message);
+
+		if (!$mail->send()) {
 			$response = [
-				'code' => 200
+				'code' => 404,
+				'status' => false,
+				'message' => 'Gagal mengirim notifikasi email'
 			];
+
 			echo json_encode($response);
 		} else {
-			$response = [
-				'code' => 404
-			];
-			echo json_encode($response);
+			$userId = $this->input->post('user_id');
+
+			$config['upload_path']          = './uploads/lampiran/';
+			$config['allowed_types']        = 'jpg|png|jpeg';
+
+
+			$this->load->library('upload', $config);
+			if (!$this->upload->do_upload('lampiran')) {
+				$response = [
+					'code' => 404,
+					'message' => 'Format file tidak sesuai'
+				];
+				echo json_encode($response);
+			} else {
+
+				$data = array('upload_data' => $this->upload->data());
+
+
+				$file_name = $data['upload_data']['file_name'];
+				$source_path = './uploads/lampiran/' . $data['upload_data']['file_name'];
+				$dir_path = $_SERVER['DOCUMENT_ROOT'] . '/sarapan/esarapan/public/lampiran/';
+				if (!is_dir($dir_path)) {
+					mkdir($dir_path, 0777, true);
+				}
+
+				$destination_path = $dir_path . $file_name;
+
+				if (file_exists($source_path)) {
+					if (copy($source_path, $destination_path)) {
+					} else {
+						$response = [
+							'code' => 404,
+							'message' => 'Terjadi kesalahan'
+						];
+						echo json_encode($response);
+					}
+				}
+
+				$dataAspirasi = [
+					'id_user' => $userId,
+					'id_kategori' => $this->input->post('id_kategori'),
+					'id_dewan' => $this->input->post('id_dewan'),
+					'uraian_aspirasi' => $this->input->post('uraian_aspirasi'),
+					'created_at' => date('Y-m-d H:i:s'),
+					'updated_at' => date('Y-m-d H:i:s')
+
+				];
+
+				$dataDetAspirasi = [
+					'id_aspirasi' => $this->aspirasi_model->getMaxId(),
+					'alamat' => $this->input->post('alamat'),
+					'kecamatan' => $this->input->post('kecamatan'),
+					'kelurahan' => $this->input->post('kelurahan'),
+					'rt' => $this->input->post('rt'),
+					'rw' => $this->input->post('rw'),
+					'lampiran' => $file_name,
+					'tanggal' => date('Y-m-d'),
+					'status_aspirasi' => 'Pending'
+				];
+
+				$insert =  $this->aspirasi_model->insertAspirasi($dataAspirasi, $dataDetAspirasi);
+				if ($insert == true) {
+					$response = [
+						'code' => 200
+					];
+					echo json_encode($response);
+				} else {
+					$response = [
+						'code' => 404,
+						'message' => 'Terjadi kesalahan'
+					];
+					echo json_encode($response);
+				}
+			}
 		}
 	}
-
-
 	public function getDistrict()
 	{
 		echo json_encode($this->kecamatan_model->getAllKecamatan());
@@ -189,6 +285,25 @@ class User extends CI_Controller
 	{
 		$id = $this->input->get('id');
 		echo json_encode($this->kategori_model->getAllKategoriById($id));
+	}
+
+	public function getBiodataByUserId()
+	{
+		$userId = $this->input->get('user_id');
+		echo json_encode($this->biodata_model->getBiodataById($userId));
+	}
+
+	public function getMyAspirasi()
+	{
+		$userId = $this->input->get('user_id');
+		echo json_encode($this->aspirasi_model->getMyAspirasi($userId));
+	}
+
+	public function getAspirasiDewanById()
+	{
+		$userId = $this->input->get('dewan_id');
+		$status = $this->input->get('status');
+		echo json_encode($this->aspirasi_model->getAspirasiDewanById($userId, $status));
 	}
 }
 

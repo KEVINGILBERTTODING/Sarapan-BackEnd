@@ -35,6 +35,14 @@ class Biodata_model extends CI_Model
 			return false;
 		}
 	}
+
+	public function getBiodataById($id)
+	{
+		$this->db->select('*');
+		$this->db->from('biodata');
+		$this->db->where('id_user', $id);
+		return $this->db->get()->row_array();
+	}
 }
 
 /* End of file Biodate_model.php */
