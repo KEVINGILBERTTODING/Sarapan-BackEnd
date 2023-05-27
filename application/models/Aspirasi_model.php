@@ -109,4 +109,15 @@ class Aspirasi_model extends CI_Model
 		$this->db->order_by('aspirasi.id_aspirasi', 'desc');
 		return $this->db->get()->result();
 	}
+
+	public function updateAspirasi($id, $dataAspirasi)
+	{
+		$this->db->where('id_aspirasi', $id);
+		$update = $this->db->update('aspirasi_detail', $dataAspirasi);
+		if ($update) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

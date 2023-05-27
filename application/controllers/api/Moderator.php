@@ -123,7 +123,7 @@ class Moderator extends CI_Controller
 		} else {
 
 			$data = [
-				'status_sarpan' => 'Valid'
+				'status_sarpan' => $status2
 			];
 
 			$update = $this->sarpan_model->updateSarpan($idSarpan, $data);
@@ -147,6 +147,100 @@ class Moderator extends CI_Controller
 	{
 		$status = $this->input->get('status');
 		echo json_encode($this->aspirasi_model->getAspirasiModerator($status));
+	}
+
+	public function updateAspirasi()
+	{
+		$idAspirasi = $this->input->post('id_aspirasi');
+		$email = $this->input->post('email');
+		$aspirasi = $this->input->post('aspirasi');
+		$status = $this->input->post('status');
+		$tanggal = $this->input->post('tanggal');
+
+		if ($status == 'Valid') {
+			$subject = 'Aspirasi Anda Telah Disetujui';
+			$status2 = 'Valid';
+			$message =
+				"
+					<b> PERHATIAN JANGAN MEMBALAS EMAIL INI </b>
+					<hr>
+					<br>
+					<p>Berkaitan dengan aspirasi yang anda berikan kepada kami, pada tanggal $tanggal, kami telah memvalidasi dan telah kami setujui. Berikut adalah aspirasi anda yang telah kami setujui.</p>
+					<br>
+					<p> $aspirasi </p>
+					<br>
+					<p>Terima kasih atas aspirasi yang anda berikan kepada kami.</p>
+					<br>
+					
+	
+					<b> Sarapan App </b>
+					";
+		} else {
+			$subject = 'Aspirasi Anda Tidak Disetujui';
+			$status2 = 'Non-Valid';
+			$message =
+				"
+					<b> PERHATIAN JANGAN MEMBALAS EMAIL INI </b>
+					<hr>
+					<br>
+					<p>Berkaitan dengan aspirasi yang anda berikan kepada kami, pada tanggal $tanggal, kami tidak dapat menyetujui aspirasi anda. Berikut adalah aspirasi anda yang tidak kami setujui.</p>
+					<br>
+					<p> $aspirasi </p>
+					<br>
+					<p>Terima kasih atas aspirasi yang anda berikan kepada kami.</p>
+					<br>
+					
+	
+					<b> Sarapan App </b>
+					";
+		}
+
+
+
+		// Config email
+		$this->load->library('PHPMailer_load'); //Load Library PHPMailer
+		$mail = $this->phpmailer_load->load(); // Mendefinisikan Variabel Mail
+		$mail->isSMTP();  // Mengirim menggunakan protokol SMTP
+		$mail->Host = 'smtp.gmail.com'; // Host dari server SMTP
+		$mail->SMTPAuth = true; // Autentikasi SMTP
+		$mail->Username = 'sarapanapp@gmail.com';
+		$mail->Password = 'rfwrxdjqmfbthrxp';
+		$mail->SMTPSecure = 'tls';
+		$mail->Port = 587;
+		$mail->setFrom('e-sarapan@gmail.com', 'E-Sarapan'); // Sumber email
+		$mail->addAddress($email, $email); // Alamat tujuan
+		$mail->Subject = $subject; // Subjek Email
+
+		$mail->msgHtml($message);
+
+		if (!$mail->send()) {
+			$response = [
+				'code' => 404,
+				'status' => true
+			];
+
+			echo json_encode($response);
+		} else {
+
+			$data = [
+				'status_aspirasi' => $status2
+			];
+
+			$update = $this->aspirasi_model->updateAspirasi($idAspirasi, $data);
+			if ($update == true) {
+				$response = [
+					'code' => 200,
+					'status' => true
+				];
+				echo json_encode($response);
+			} else {
+				$response = [
+					'code' => 404,
+					'status' => false
+				];
+				echo json_encode($response);
+			}
+		}
 	}
 }
 
