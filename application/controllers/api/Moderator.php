@@ -256,6 +256,11 @@ class Moderator extends CI_Controller
 		$dateEnd = $this->input->get('date_end');
 		echo json_encode($this->sarpan_model->getAllSarpanLaporanModerator($dateStart, $dateEnd));
 	}
+
+	public function getAllAspirasiModerator2()
+	{
+		echo json_encode($this->aspirasi_model->getAllAspirasiModerator());
+	}
 }
 
 
