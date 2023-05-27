@@ -89,4 +89,14 @@ class Sarpan_model extends CI_Model
 		$this->db->order_by('sarpan.id_sarpan', 'desc');
 		return $this->db->get()->result();
 	}
+
+	public function getAllSarpanLaporanModerator2()
+	{
+		$this->db->select('*');
+		$this->db->from('sarpan');
+		$this->db->join('users', 'users.id = sarpan.id_user', 'left');
+		$this->db->join('biodata', 'biodata.id_user = sarpan.id_user', 'left');
+		$this->db->order_by('sarpan.id_sarpan', 'desc');
+		return $this->db->get()->result();
+	}
 }

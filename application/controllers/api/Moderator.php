@@ -261,6 +261,38 @@ class Moderator extends CI_Controller
 	{
 		echo json_encode($this->aspirasi_model->getAllAspirasiModerator());
 	}
+
+	public function cetakLaporanAspirasi($dateStart, $dateEnd)
+	{
+
+		$this->load->library('pdflib');
+		$this->pdflib->setFileName('Laporan_aspirasi.pdf');
+		$this->pdflib->setPaper('A4', 'landscape');
+
+		$data['date_start'] = $dateStart;
+		$data['date_end'] = $dateEnd;
+		$data['aspirasi'] = $this->aspirasi_model->getAspirasiLaporanModerator($dateStart, $dateEnd);
+
+		$this->pdflib->loadView('v_laporan_aspirasi', $data);
+	}
+
+	public function getAllSarpanLaporanModerator2()
+	{
+		echo json_encode($this->sarpan_model->getAllSarpanLaporanModerator2());
+	}
+
+	public function cetakLaporanSarapan($dateStart, $dateEnd)
+	{
+
+		$this->load->library('pdflib');
+		$this->pdflib->setFileName('Laporan_sarapan.pdf');
+		$this->pdflib->setPaper('A4', 'landscape');
+		$data['date_start'] = $dateStart;
+		$data['date_end'] = $dateEnd;
+		$data['sarapan'] = $this->sarpan_model->getAllSarpanLaporanModerator2($dateStart, $dateEnd);
+
+		$this->pdflib->loadView('v_laporan_sarpan', $data);
+	}
 }
 
 
