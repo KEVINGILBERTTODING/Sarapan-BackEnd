@@ -63,6 +63,43 @@ class Users_model extends CI_Model
 		$this->db->where('id', $userId);
 		return $this->db->get()->row_array();
 	}
+
+	public function updateUser($userId, $data)
+	{
+		$this->db->where('id', $userId);
+		$update = $this->db->update('users', $data);
+		if ($update) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public function getUserById2($userId)
+	{
+		$this->db->select('*');
+		$this->db->from('users');
+		$this->db->where('id', $userId);
+		$this->db->join('biodata', 'biodata.id_user = users.id', 'left');
+		return $this->db->get()->row_array();
+	}
+
+	public function updateProfile($id, $dataUsers, $dataBiodata)
+	{
+		$this->db->trans_start();
+		$this->db->where('id', $id);
+		$this->db->update('users', $dataUsers);
+
+		$this->db->where('id_user', $id);
+		$this->db->update('biodata', $dataBiodata);
+
+		$this->db->trans_complete();
+		if ($this->db->trans_status() == true) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
 
 /* End of file Users_model.php */

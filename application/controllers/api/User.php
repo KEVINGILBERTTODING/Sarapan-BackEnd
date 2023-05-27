@@ -305,6 +305,122 @@ class User extends CI_Controller
 		$status = $this->input->get('status');
 		echo json_encode($this->aspirasi_model->getAspirasiDewanById($userId, $status));
 	}
+
+	public function editPassword()
+	{
+		$userId = $this->input->post('user_id');
+		$oldPassword = $this->input->post('old_password');
+		$newPassword = $this->input->post('new_password');
+		$dataUser = $this->users_model->getUserById($userId);
+		if (password_verify($oldPassword, $dataUser['password'])) {
+			$dataPassword = [
+				'password' => password_hash($newPassword, PASSWORD_DEFAULT),
+				'updated_at' => date('Y-m-d H:i:s')
+			];
+
+
+			$updatePassword = $this->users_model->updateUser($userId, $dataPassword);
+			if ($updatePassword == true) {
+				$response = [
+					'code' => 200,
+
+				];
+				echo json_encode($response);
+			} else {
+				$response = [
+					'code' => 404,
+					'message' => 'Gagal mengubah password'
+
+				];
+				echo json_encode($response);
+			}
+		} else {
+			$response = [
+				'code' => 404,
+				'message' => 'Password lama anda salah'
+			];
+			echo json_encode($response);
+		}
+	}
+
+	public function getUserByUserId()
+	{
+		$id = $this->input->get('user_id');
+		echo json_encode($this->users_model->getUserById2($id));
+	}
+
+	public function editProfile()
+	{
+		$userId = $this->input->post('user_id');
+		$email = $this->input->post('email');
+		$cekUsername = $this->users_model->login($email);
+		if ($cekUsername != null) {
+			if ($cekUsername['id'] == $userId) {
+				$dataUsers = [
+					'name' => $this->input->post('nama_lengkap'),
+					'email' => $this->input->post('email'),
+					'username' => $this->input->post('username'),
+					'updated_at' => date('Y-m-d H:i:s')
+				];
+
+				$dataBiodata = [
+					'no_ktp' => $this->input->post('no_ktp'),
+					'no_kk' => $this->input->post('no_kk'),
+					'telepon' => $this->input->post('telepon'),
+					'alamat_rumah' => $this->input->post('alamat_rumah')
+
+				];
+
+				$trans = $this->users_model->updateProfile($userId, $dataUsers, $dataBiodata);
+				if ($trans == true) {
+					$response = [
+						'code' => 200
+					];
+					echo json_encode($response);
+				} else {
+					$response = [
+						'code' => 404
+					];
+					echo json_encode($response);
+				}
+			} else {
+				$response = [
+					'code' => 404,
+					'message' => 'Email telah digunakan'
+				];
+				echo json_encode($response);
+			}
+		} else {
+
+			$dataUsers = [
+				'name' => $this->input->post('nama_lengkap'),
+				'email' => $this->input->post('email'),
+				'username' => $this->input->post('username'),
+				'updated_at' => date('Y-m-d H:i:s')
+			];
+
+			$dataBiodata = [
+				'no_ktp' => $this->input->post('no_ktp'),
+				'no_kk' => $this->input->post('no_kk'),
+				'telepon' => $this->input->post('telepon'),
+				'alamat_rumah' => $this->input->post('alamat_rumah')
+
+			];
+
+			$trans = $this->users_model->updateProfile($userId, $dataUsers, $dataBiodata);
+			if ($trans == true) {
+				$response = [
+					'code' => 200
+				];
+				echo json_encode($response);
+			} else {
+				$response = [
+					'code' => 404
+				];
+				echo json_encode($response);
+			}
+		}
+	}
 }
 
 

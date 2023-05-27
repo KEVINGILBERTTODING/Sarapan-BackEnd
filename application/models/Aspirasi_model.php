@@ -95,4 +95,18 @@ class Aspirasi_model extends CI_Model
 		$this->db->order_by('aspirasi.id_aspirasi', 'desc');
 		return $this->db->get()->result();
 	}
+
+	public function getAspirasiModerator($status)
+	{
+		$this->db->select('*');
+		$this->db->from('aspirasi');
+		$this->db->join('aspirasi_detail', 'aspirasi_detail.id_aspirasi = aspirasi.id_aspirasi', 'left');
+		$this->db->join('users', 'users.id = aspirasi.id_user', 'left');
+		$this->db->join('dewan', 'dewan.id_dewan = aspirasi.id_dewan', 'left');
+		$this->db->join('biodata', 'biodata.id_user = aspirasi.id_user', 'left');
+		$this->db->join('kategori', 'kategori.id_kategori = aspirasi.id_kategori', 'left');
+		$this->db->where('aspirasi_detail.status_aspirasi', $status);
+		$this->db->order_by('aspirasi.id_aspirasi', 'desc');
+		return $this->db->get()->result();
+	}
 }
