@@ -242,6 +242,20 @@ class Moderator extends CI_Controller
 			}
 		}
 	}
+
+	public function getAspirasiLaporanModerator()
+	{
+		$dateStart = $this->input->get('date_start');
+		$dateEnd = $this->input->get('date_end');
+		echo json_encode($this->aspirasi_model->getAspirasiLaporanModerator($dateStart, $dateEnd));
+	}
+
+	public function getAllSarpanLaporanModerator()
+	{
+		$dateStart = $this->input->get('date_start');
+		$dateEnd = $this->input->get('date_end');
+		echo json_encode($this->sarpan_model->getAllSarpanLaporanModerator($dateStart, $dateEnd));
+	}
 }
 
 

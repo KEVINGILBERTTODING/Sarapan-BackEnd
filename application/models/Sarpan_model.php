@@ -65,7 +65,6 @@ class Sarpan_model extends CI_Model
 		$this->db->where('sarpan.status_sarpan', $status);
 		$this->db->join('users', 'users.id = sarpan.id_user', 'left');
 		$this->db->order_by('sarpan.id_sarpan', 'desc');
-
 		return $this->db->get()->result();
 	}
 
@@ -80,5 +79,14 @@ class Sarpan_model extends CI_Model
 		}
 	}
 
-	
+	public function getAllSarpanLaporanModerator($dateStart, $dateEnd)
+	{
+		$this->db->select('*');
+		$this->db->from('sarpan');
+		$this->db->join('users', 'users.id = sarpan.id_user', 'left');
+		$this->db->where('sarpan.tanggal >=', $dateStart);
+		$this->db->where('sarpan.tanggal <=', $dateEnd);
+		$this->db->order_by('sarpan.id_sarpan', 'desc');
+		return $this->db->get()->result();
+	}
 }
