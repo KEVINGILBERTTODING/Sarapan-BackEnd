@@ -58,15 +58,16 @@ class Moderator extends CI_Controller
 		$tanggal = $this->input->post('tanggal');
 
 		if ($status == 'Valid') {
-			$subject = 'Saran dan Harapan Anda Telah Divalidasi';
+			$subject = 'Saran dan Harapan Anda Disetujui';
 			$status2 = 'Valid';
 			$message =
 				"
 					<b> PERHATIAN JANGAN MEMBALAS EMAIL INI </b>
 					<hr>
 					<br>
-					<p>Berkaitan dengan saran dan harapan yang anda berikan kepada kami, pada tanggal $tanggal, kami telah memvalidasi saran dan harapan anda. Berikut adalah saran dan harapan anda yang telah kami validasi.</p>
+					<p>Berkaitan dengan saran dan harapan yang anda berikan kepada kami, pada tanggal $tanggal, kami telah memvalidasi dan telah menyetujui saran dan harapan anda. Berikut adalah saran dan harapan anda yang telah kami validasi.</p>
 					<br>
+					<p>Detail Saran dan Harapan:</p>
 					<p> $sarpan </p>
 					<br>
 					<p>Terima kasih atas saran dan harapan yang anda berikan kepada kami.</p>
@@ -76,15 +77,16 @@ class Moderator extends CI_Controller
 					<b> Sarapan App </b>
 					";
 		} else {
-			$subject = 'Saran dan Harapan Anda Tidak Divalidasi';
+			$subject = 'Saran dan Harapan Anda Ditolak';
 			$status2 = 'Tolak';
 			$message =
 				"
 					<b> PERHATIAN JANGAN MEMBALAS EMAIL INI </b>
 					<hr>
 					<br>
-					<p>Berkaitan dengan saran dan harapan yang anda berikan kepada kami, pada tanggal $tanggal, kami tidak dapat memvalidasi saran dan harapan anda. Berikut adalah saran dan harapan anda yang tidak kami validasi.</p>
+					<p>Berkaitan dengan saran dan harapan yang anda berikan kepada kami, pada tanggal $tanggal, kami tidak dapat mmeneyetujui saran dan harapan anda. Berikut adalah saran dan harapan anda yang tidak kami setujui.</p>
 					<br>
+					<p>Detail Saran dan Harapan:</p>
 					<p> $sarpan </p>
 					<br>
 					<p>Terima kasih atas saran dan harapan yang anda berikan kepada kami.</p>
@@ -158,7 +160,7 @@ class Moderator extends CI_Controller
 		$tanggal = $this->input->post('tanggal');
 
 		if ($status == 'Valid') {
-			$subject = 'Aspirasi Anda Telah Disetujui';
+			$subject = 'Aspirasi Anda Disetujui';
 			$status2 = 'Valid';
 			$message =
 				"
@@ -167,6 +169,7 @@ class Moderator extends CI_Controller
 					<br>
 					<p>Berkaitan dengan aspirasi yang anda berikan kepada kami, pada tanggal $tanggal, kami telah memvalidasi dan telah kami setujui. Berikut adalah aspirasi anda yang telah kami setujui.</p>
 					<br>
+					<p> Berikut adalah aspirasi anda yang kami setujui:</p>
 					<p> $aspirasi </p>
 					<br>
 					<p>Terima kasih atas aspirasi yang anda berikan kepada kami.</p>
@@ -176,7 +179,7 @@ class Moderator extends CI_Controller
 					<b> Sarapan App </b>
 					";
 		} else {
-			$subject = 'Aspirasi Anda Tidak Disetujui';
+			$subject = 'Aspirasi Anda Ditolak';
 			$status2 = 'Non-Valid';
 			$alasan = $this->input->post('alasan');
 			$message =
@@ -188,7 +191,7 @@ class Moderator extends CI_Controller
 					<p>Berkaitan dengan aspirasi yang anda berikan kepada kami, pada tanggal $tanggal, kami tidak dapat menyetujui aspirasi anda. Dikarena beberapa alasan, berikut adalah alasan kami tidak dapat menyetujui aspirasi anda.</p>
 					<p> $alasan </p>
 					<br>
-					<p> Berikut adalah aspirasi anda yang tidak kami setujui.</p>
+					<p> Berikut adalah aspirasi anda yang tidak kami setujui:</p>
 					<p> $aspirasi </p>
 					<br>
 					<p>Terima kasih atas aspirasi yang anda berikan kepada kami.</p>
