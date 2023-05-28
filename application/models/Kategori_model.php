@@ -33,6 +33,14 @@ class Kategori_model extends CI_Model
 		$this->db->where('id_bidang', $id);
 		return $this->db->get()->result();
 	}
+
+	public function getAllKategori()
+	{
+		$this->db->select('*');
+		$this->db->from('kategori');
+		$this->db->join('kategori_bidang', 'kategori_bidang.id_bidang = kategori.id_bidang', 'left');
+		return $this->db->get()->result();
+	}
 }
 
 /* End of file Kategori_model.php */

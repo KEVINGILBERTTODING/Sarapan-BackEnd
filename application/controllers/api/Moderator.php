@@ -178,13 +178,17 @@ class Moderator extends CI_Controller
 		} else {
 			$subject = 'Aspirasi Anda Tidak Disetujui';
 			$status2 = 'Non-Valid';
+			$alasan = $this->input->post('alasan');
 			$message =
 				"
 					<b> PERHATIAN JANGAN MEMBALAS EMAIL INI </b>
 					<hr>
 					<br>
-					<p>Berkaitan dengan aspirasi yang anda berikan kepada kami, pada tanggal $tanggal, kami tidak dapat menyetujui aspirasi anda. Berikut adalah aspirasi anda yang tidak kami setujui.</p>
+
+					<p>Berkaitan dengan aspirasi yang anda berikan kepada kami, pada tanggal $tanggal, kami tidak dapat menyetujui aspirasi anda. Dikarena beberapa alasan, berikut adalah alasan kami tidak dapat menyetujui aspirasi anda.</p>
+					<p> $alasan </p>
 					<br>
+					<p> Berikut adalah aspirasi anda yang tidak kami setujui.</p>
 					<p> $aspirasi </p>
 					<br>
 					<p>Terima kasih atas aspirasi yang anda berikan kepada kami.</p>
@@ -222,9 +226,18 @@ class Moderator extends CI_Controller
 			echo json_encode($response);
 		} else {
 
-			$data = [
-				'status_aspirasi' => $status2
-			];
+			if ($status2 == 'Non-Valid') {
+				$alasan = $this->input->post('alasan');
+				$data = [
+					'status_aspirasi' => $status2,
+					'alasan' => $alasan
+				];
+			} else {
+
+				$data = [
+					'status_aspirasi' => $status2
+				];
+			}
 
 			$update = $this->aspirasi_model->updateAspirasi($idAspirasi, $data);
 			if ($update == true) {
@@ -297,6 +310,74 @@ class Moderator extends CI_Controller
 	public function getAllUser()
 	{
 		echo json_encode($this->users_model->getAllUser());
+	}
+
+	public function getaAllKategori()
+	{
+		echo json_encode($this->kategori_model->getAllKategori());
+	}
+
+	public function editProfile()
+	{
+		$userId = $this->input->post('user_id');
+		$email = $this->input->post('email');
+		$cekUsername = $this->users_model->login($email);
+		if ($cekUsername != null) {
+			if ($cekUsername['id'] == $userId) {
+				$dataUsers = [
+					'name' => $this->input->post('nama_lengkap'),
+					'email' => $this->input->post('email'),
+					'username' => $this->input->post('username'),
+					'updated_at' => date('Y-m-d H:i:s')
+				];
+
+				$trans = $this->users_model->editProfileAdmin($userId, $dataUsers);
+
+				if ($trans == true) {
+					$response = [
+						'code' => 200
+					];
+					echo json_encode($response);
+				} else {
+					$response = [
+						'code' => 404,
+						'message' => 'Gagal mengubah profile'
+					];
+					echo json_encode($response);
+				}
+			} else {
+				$response = [
+					'code' => 404,
+					'message' => 'Email telah digunakan'
+				];
+				echo json_encode($response);
+			}
+		} else {
+
+			$dataUsers = [
+				'name' => $this->input->post('nama_lengkap'),
+				'email' => $this->input->post('email'),
+				'username' => $this->input->post('username'),
+				'updated_at' => date('Y-m-d H:i:s')
+			];
+
+
+
+			$trans = $this->users_model->editProfileAdmin($userId, $dataUsers);
+			if ($trans == true) {
+				$response = [
+					'code' => 200
+				];
+				echo json_encode($response);
+			} else {
+				$response = [
+					'code' => 404,
+					'message' => 'Gagal mengubah profile'
+
+				];
+				echo json_encode($response);
+			}
+		}
 	}
 }
 

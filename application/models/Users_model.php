@@ -108,6 +108,16 @@ class Users_model extends CI_Model
 		$this->db->where('level', 'User');
 		return $this->db->get()->result();
 	}
+	public function editProfileAdmin($id, $data)
+	{
+		$this->db->where('id', $id);
+		$update = $this->db->update('users', $data);
+		if ($update) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
 
 /* End of file Users_model.php */
