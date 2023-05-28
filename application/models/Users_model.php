@@ -100,6 +100,14 @@ class Users_model extends CI_Model
 			return false;
 		}
 	}
+
+	public function getAllUser()
+	{
+		$this->db->select('*');
+		$this->db->from('users');
+		$this->db->where('level', 'User');
+		return $this->db->get()->result();
+	}
 }
 
 /* End of file Users_model.php */

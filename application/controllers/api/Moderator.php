@@ -293,6 +293,11 @@ class Moderator extends CI_Controller
 
 		$this->pdflib->loadView('v_laporan_sarpan', $data);
 	}
+
+	public function getAllUser()
+	{
+		echo json_encode($this->users_model->getAllUser());
+	}
 }
 
 
