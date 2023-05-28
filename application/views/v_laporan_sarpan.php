@@ -35,7 +35,7 @@
 			<th>Tanggal</th>
 			<th>Nama</th>
 			<th>No. KTP</th>
-			<th>Uraian Aspirasi</th>
+			<th>Uraian Saran</th>
 			<th>Status</th>
 		</thead>
 		<tbody>
